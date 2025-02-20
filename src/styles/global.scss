@@ -1,0 +1,76 @@
+@font-face {
+    font-family: "Kalameh";
+    src: url("../assets/fonts/Kalameh-thin.ttf") format("truetype");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Kalameh";
+    src: url("../assets/fonts/Kalameh-Regular.ttf") format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Kalameh";
+    src: url("../assets/fonts/Kalameh-Bold.ttf") format("truetype");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "Kalameh";
+    src: url("../assets/fonts/Kalameh-Black.ttf") format("truetype");
+    font-weight: 900;
+}
+
+$font-family-base: "Kalameh", sans-serif;
+$body-bg: #fcfcf8;
+
+$primary: #63610c;
+$secondary: #fcfcf8;
+$tertiary: #363007;
+
+$on-primary: #fcfcf8;
+$on-secondary: #63610c;
+$on-tertiary: #fcfcf8;
+
+.on-primary {
+    color: $on-primary !important;
+}
+
+.on-secondary {
+    color: $on-secondary !important;
+}
+
+.on-tertiary {
+    color: $on-tertiary !important;
+}
+
+// Define background color utilities
+.bg-primary {
+    background-color: $primary !important;
+    color: $on-primary !important;
+}
+
+.bg-secondary {
+    background-color: $secondary !important;
+    color: $on-secondary !important;
+}
+
+.bg-tertiary {
+    background-color: $tertiary !important;
+    color: $on-tertiary !important;
+}
+
+.border-on-primary {
+    border-color: $on-primary !important;
+}
+
+.border-on-secondary {
+    border-color: $on-secondary !important;
+}
+
+.border-on-tertiary {
+    border-color: $on-tertiary !important;
+}
+
+@import "../../node_modules/bootstrap/scss/bootstrap";

@@ -117,4 +117,15 @@ export const ProductsApi = {
             throw error;
         }
     },
+    getAllProducts: async (filters = {}, offset = 0, limit = 10) => {
+        try {
+            const response = await api.get("/products/all", {
+                params: { ...filters, offset, limit },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            throw error;
+        }
+    },
 };

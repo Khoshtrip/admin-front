@@ -27,37 +27,12 @@ const LoginModal = () => {
 
     const [touch, setTouch] = useState({});
     const [errors, setErrors] = useState({});
-    const [timer, setTimer] = useState(120);
-    const [isCounting, setIsCounting] = useState(false);
-
-    const startTimer = () => {
-        setIsCounting(true);
-        setTimer(120);
-    };
-
-    useEffect(() => {
-        let interval;
-        if (isCounting) {
-            interval = setInterval(() => {
-                setTimer((prev) => {
-                    if (prev <= 1) {
-                        clearInterval(interval);
-                        setIsCounting(false);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [isCounting]);
 
     const handleChange = (e) => {
         const value = e.target.value.replace(/[۰-۹]/g, (d) =>
             "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
         );
         setFormData({ ...formData, [e.target.name]: value });
-        validateField(e.target.name, value);
         setTouch({ ...touch, [e.target.name]: true });
     };
 
@@ -96,47 +71,8 @@ const LoginModal = () => {
         return remainder < 2 ? check === remainder : check === 11 - remainder;
     }
 
-    const validateField = (fieldName, value) => {
-        let newErrors = { ...errors };
-        switch (fieldName) {
-            case "password":
-                newErrors.password =
-                    value.length < 6
-                        ? "Password must be at least 6 characters long"
-                        : "";
-                break;
-            case "passwordRepeat":
-                newErrors.passwordRepeat =
-                    value !== formData.password ? "Passwords do not match" : "";
-                break;
-            case "email":
-                newErrors.email = !/\S+@\S+\.\S+/.test(value)
-                    ? "Email is invalid"
-                    : "";
-                break;
-            case "phone_number":
-                newErrors.phone_number = !/^(\+98|0)?9\d{9}$/.test(value) // Matches +989xxxxxxxx or 09xxxxxxxx
-                    ? "Phone number is invalid"
-                    : "";
-                break;
-            case "businessPhone":
-                newErrors.phone_number = !/^\d{9}$/.test(value)
-                    ? "Phone number is invalid"
-                    : "";
-                break;
-            case "nationalCode":
-                newErrors.nationalCode = !validateNationalCode(value)
-                    ? "National Code is invalid"
-                    : "";
-                break;
-            default:
-                break;
-        }
-        setErrors(newErrors);
-    };
 
     const resetState = () => {
-        setErrors({});
         setFormData({
             password: "",
             phone_number: "",
@@ -160,14 +96,6 @@ const LoginModal = () => {
         resetState();
     };
 
-    const resendCode = () => {
-        AuthenticationApi.sendVerificationCode(formData.email)
-            .then(() => {
-                startTimer();
-            })
-            .catch(() => {});
-    };
-
     return (
         <Modal show={showModal} fullscreen="md-down" centered>
             <Modal.Header>
@@ -182,8 +110,6 @@ const LoginModal = () => {
                             placeholder="Phone Number"
                             name="phone_number"
                             value={formData.phone_number}
-                            isValid={touch.phone_number && !errors.phone_number}
-                            isInvalid={!!errors.phone_number}
                             onChange={handleChange}
                             required
                         />

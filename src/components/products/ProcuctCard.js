@@ -1,21 +1,10 @@
-import {
-    Card,
-    Badge,
-    ListGroup,
-    Stack,
-    Button,
-    Col,
-    Row,
-} from "react-bootstrap";
+import { Card, Badge, ListGroup, Stack } from "react-bootstrap";
 import { useState } from "react";
-import { ProductsApi } from "../../apis/ProductsApi";
 import { productCategories } from "../../utils/constants";
-import { showGlobalAlert } from "../core/KhoshAlert";
 
 export const ProductCard = ({
     product,
     onProductClick,
-    onChangeProductStatus,
     isSelected,
     onSelectProduct,
 }) => {
@@ -25,44 +14,6 @@ export const ProductCard = ({
         product.discount > 0
             ? (product.price * (1 - product.discount / 100)).toFixed(2)
             : product.price;
-
-    const onChangeStatusClick = (productId, status) => {
-        if (status === true) {
-            ProductsApi.deactivateProduct(productId)
-                .then((response) => {
-                    onChangeProductStatus(product.id, false);
-                    showGlobalAlert({
-                        title: "Product Deactivated",
-                        message: "Product has been deactivated successfully",
-                        variant: "success",
-                    });
-                })
-                .catch((error) => {
-                    showGlobalAlert({
-                        title: "Error",
-                        message: "Failed to deactivate product",
-                        variant: "danger",
-                    });
-                });
-        } else {
-            ProductsApi.activateProduct(productId)
-                .then((response) => {
-                    onChangeProductStatus(product.id, true);
-                    showGlobalAlert({
-                        title: "Product Activated",
-                        message: "Product has been activated successfully",
-                        variant: "success",
-                    });
-                })
-                .catch((error) => {
-                    showGlobalAlert({
-                        title: "Error",
-                        message: "Failed to activate product",
-                        variant: "danger",
-                    });
-                });
-        }
-    };
 
     return (
         <Card
@@ -82,7 +33,12 @@ export const ProductCard = ({
                     checked={isSelected}
                     onChange={(event) => {
                         event.stopPropagation();
-                        onSelectProduct(product.id, event.target.checked);
+                        onSelectProduct(
+                            product.id,
+                            product.name,
+                            product.category,
+                            event.target.checked
+                        );
                     }}
                 />
             )}
@@ -129,36 +85,18 @@ export const ProductCard = ({
                     </Stack>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                    {product.stock > 0
-                        ? product.stock < 10
-                            ? "Less Than 10 remaining"
-                            : "In stock"
-                        : "Out of stock"}
+                    Stocks Available: {product.stock}
                 </ListGroup.Item>
             </ListGroup>
-            <Card.Footer>
-                <Row className="justify-content-between align-items-center">
-                    <Col>
-                        <Badge pill bg="dark" className="p-2 px-3">
-                            {productCategories[product.category]}
-                        </Badge>
-                    </Col>
-                    <Col>
-                        <Button
-                            className="ms-5"
-                            size="sm"
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                onChangeStatusClick(
-                                    product.id,
-                                    product.isActive
-                                );
-                            }}
-                        >
-                            {product.isActive ? "Deactivate" : "Ativate"}
-                        </Button>
-                    </Col>
-                </Row>
+            <Card.Footer className="justify-content-center">
+                <Badge
+                    pill
+                    bg="dark"
+                    className="p-2 px-4"
+                    style={{ width: "100%" }}
+                >
+                    {productCategories[product.category]}
+                </Badge>
             </Card.Footer>
         </Card>
     );

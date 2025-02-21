@@ -5,7 +5,6 @@ import { ProductsApi } from "../../apis/ProductsApi";
 import { ImagesApi } from "../../apis/ImagesApi";
 import Khoshpinner from "../core/Khoshpinner";
 import { showGlobalAlert } from "../core/KhoshAlert";
-import { productCategories } from "../../utils/constants";
 
 function uploadImagesHelper(selectedImages) {
     return new Promise((resolve, reject) => {
@@ -34,15 +33,14 @@ function uploadImagesHelper(selectedImages) {
     });
 }
 
-const CreateProductModal = ({ show, onHide, postCreate }) => {
+const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
     const [productData, setProductData] = useState({
         name: "",
+        photos: [],
         description: "",
         price: "",
         discount: "",
-        stock: "",
-        category: "",
-        summary: "",
+        available_units: "",
         selectedImages: [],
     });
     const [touch, setTouch] = useState({});
@@ -66,6 +64,26 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
         e.preventDefault();
         setIsLoading(true);
         const { selectedImages } = productData;
+
+        setProductData((prev) => ({
+            ...prev,
+
+            hotel: selectedProducts.find(
+                (product) => product.category === "hotel"
+            ).id,
+
+            flight: selectedProducts.find(
+                (product) => product.category === "flight"
+            ).id,
+
+            activities: selectedProducts
+                .filter(
+                    (product) =>
+                        product.category !== "hotel" ||
+                        product.category !== "flight"
+                )
+                .map((product) => product.id),
+        }));
 
         uploadImagesHelper(selectedImages)
             .then(async (imageIds) => {
@@ -159,8 +177,14 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
             discount: "",
             stock: "",
             category: "",
-            summary: "",
+            start_date: "",
+            end_date: "",
             selectedImages: [],
+            photos: [],
+            hotel: 0,
+            flight: 0,
+            activities: [],
+            available_units: 0,
         });
     };
 
@@ -172,7 +196,7 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
     return (
         <Modal show={show} onHide={onClose} fullscreen="md-down" centered>
             <Modal.Header closeButton>
-                <Modal.Title>New Product</Modal.Title>
+                <Modal.Title>New Package</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
@@ -226,7 +250,7 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
                         </Col>
                     </Form.Group>
 
-                    <Form.Group controlId="Discount" as={Row}>
+                    {/* <Form.Group controlId="Discount" as={Row}>
                         <Form.Label column sm="2">
                             Discount*
                         </Form.Label>
@@ -244,7 +268,7 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
                                 {errors.discount}
                             </Form.Control.Feedback>
                         </Col>
-                    </Form.Group>
+                    </Form.Group> */}
 
                     <Form.Group controlId="Stock" as={Row}>
                         <Form.Label column sm="2">
@@ -263,45 +287,6 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
                             <Form.Control.Feedback type="invalid">
                                 {errors.stock}
                             </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group controlId="Category" as={Row}>
-                        <Form.Label column sm="2">
-                            Category*
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Select
-                                name="category"
-                                value={productData.category || ""}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="">Select a Category</option>
-                                {Object.entries(productCategories).map(
-                                    ([key, value]) => (
-                                        <option key={key} value={key}>
-                                            {value}
-                                        </option>
-                                    )
-                                )}
-                            </Form.Select>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group controlId="Summary" as={Row}>
-                        <Form.Label column sm="2">
-                            Summary*
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                name="summary"
-                                value={productData.summary}
-                                onChange={handleChange}
-                                required
-                            />
                         </Col>
                     </Form.Group>
 
@@ -328,6 +313,36 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
+                    <Form.Group controlId="StartDate" as={Row}>
+                        <Form.Label column sm="2">
+                            Start Date*
+                        </Form.Label>
+                        <Col sm="10">
+                            <Form.Control
+                                type="date"
+                                name="start_date"
+                                value={productData.start_date}
+                                onChange={handleChange}
+                                required
+                            />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group controlId="EndDate" as={Row}>
+                        <Form.Label column sm="2">
+                            End Date*
+                        </Form.Label>
+                        <Col sm="10">
+                            <Form.Control
+                                type="date"
+                                name="end_date"
+                                value={productData.end_date}
+                                onChange={handleChange}
+                                required
+                            />
+                        </Col>
+                    </Form.Group>
+
                     <Modal.Footer as={Row} className="mb-0 pb-0">
                         <Button
                             variant="outline-success"
@@ -351,4 +366,4 @@ const CreateProductModal = ({ show, onHide, postCreate }) => {
     );
 };
 
-export default CreateProductModal;
+export default CreatePackageModal;

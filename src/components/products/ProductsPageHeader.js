@@ -155,32 +155,24 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
 };
 
 const ProductsPageHeader = ({
-    onAddNewProductClick,
     onFilterChange,
     onApplyFilters,
     selectedProducts,
-    onBulkDelete,
-    onBulkInventoryChange,
+    onCreatePackage,
+    onSelectProduct,
 }) => {
     const [showFilters, setShowFilters] = useState(false);
-    const [inventoryValue, setInventoryValue] = useState(0);
 
     return (
         <>
-            <Row className="mb-1 d-flex" style={{ width: "100%" }}>
+            <Row
+                className="mb-1 d-flex justify-content-center"
+                style={{ width: "100%" }}
+            >
                 <Col>
-                    <h1 className="ms-4 float-start rounded-pill">Products</h1>
+                    <h1 className="ms-4 float-start">Products</h1>
                 </Col>
                 <Col>
-                    {/* <Button
-                        variant="success"
-                        className="float-end rounded-pill px-3"
-                        onClick={() => {
-                            onAddNewProductClick();
-                        }}
-                    >
-                        + Add
-                    </Button> */}
                     <Button
                         variant="primary"
                         onClick={() => setShowFilters((prev) => !prev)}
@@ -190,39 +182,41 @@ const ProductsPageHeader = ({
                     </Button>
                     {selectedProducts.length > 0 && (
                         <Button
-                            variant="danger"
-                            className="float-end rounded-pill px-3 me-2"
-                            onClick={() => onBulkDelete()}
+                            variant="success"
+                            className="float-end rounded-pill px-3 me-2 pt-2"
+                            onClick={() => {
+                                onCreatePackage();
+                            }}
                         >
-                            Delete
+                            + Create
                         </Button>
-                    )}
-                    {selectedProducts.length > 0 && (
-                        <>
-                            <Form.Control
-                                type="number"
-                                placeholder="Inventory"
-                                value={inventoryValue}
-                                onChange={(e) =>
-                                    setInventoryValue(e.target.value)
-                                }
-                                style={{ width: "150px" }}
-                                className="float-end me-2"
-                            />
-                            <Button
-                                variant="warning"
-                                className="float-end rounded-pill px-3 me-2"
-                                onClick={() =>
-                                    onBulkInventoryChange(inventoryValue)
-                                }
-                            >
-                                Change Inventory
-                            </Button>
-                        </>
                     )}
                 </Col>
                 <hr className="my-2 border-primary" />
             </Row>
+            {selectedProducts.length !== 0 && (
+                <Row md={"auto"} d-flex justify-content-center>
+                    {selectedProducts.map((it) => (
+                        <Col key={it.id} className="mb-3">
+                            <Button
+                                variant="outline-primary"
+                                className="rounded-pill px-4 p-1"
+                                onClick={() => {
+                                    onSelectProduct(
+                                        it.id,
+                                        it.title,
+                                        it.type,
+                                        false
+                                    );
+                                }}
+                            >
+                                {it.title}
+                            </Button>
+                        </Col>
+                    ))}
+                </Row>
+            )}
+
             <FilterComponent
                 onFilterChange={onFilterChange}
                 showFilters={showFilters}

@@ -3,22 +3,27 @@ import { Row, Col, Container } from "react-bootstrap";
 import { ProductCard } from "../components/products/ProcuctCard";
 import ProductDetailModal from "../components/products/ProductDetailModal";
 import ProductsPageHeader from "../components/products/ProductsPageHeader";
-import CreateProductModal from "../components/products/CreateProdcutModal";
+import CreateProductModal from "../components/products/CreatePackageModal";
 import { ProductsApi } from "../apis/ProductsApi";
 import { showGlobalAlert } from "../components/core/KhoshAlert";
 import "../styles/products/Products.css";
 import Khoshpinner from "../components/core/Khoshpinner";
 import PaginationItems from "../components/core/PaginationItems";
+import CreatePackageModal from "../components/products/CreatePackageModal";
 
 const ProductsPage = () => {
-    const [showDetailModal, setShowDetailModal] = useState(false);
-    const [productDetailId, setProductDetailId] = useState(undefined);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [filters, setFilters] = useState({});
     const [products, setProducts] = useState([]);
     const [npages, setNpages] = useState(1);
     const [limit, setLimit] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [productDetailId, setProductDetailId] = useState(undefined);
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
+
+    const [filters, setFilters] = useState({});
+
     const [selectedProducts, setSelectedProducts] = useState([]);
 
     const onFilterChange = (filters) => {
@@ -27,7 +32,7 @@ const ProductsPage = () => {
 
     const fetchProducts = async (page) => {
         setIsLoading(true);
-        await ProductsApi.getProducts(filters, (page - 1) * limit, limit)
+        await ProductsApi.getAllProducts(filters, (page - 1) * limit, limit)
             .then((response) => {
                 setProducts(
                     response.data.products.map((product) => {
@@ -74,65 +79,41 @@ const ProductsPage = () => {
         }
     };
 
-    const changeProoductStatus = (productId, isActive) => {
-        const index = products.findIndex((item) => item.id === productId);
-        if (index !== -1) {
-            const product = products[index];
-            product.isActive = isActive;
-            setProducts(
-                products.map((item, i) => (i === index ? product : item))
-            );
-        }
-    };
-
-    const onSelectProduct = (productId, isSelected) => {
+    const onSelectProduct = (
+        productId,
+        productTitle,
+        productType,
+        isSelected
+    ) => {
         if (isSelected) {
-            setSelectedProducts((prev) => [...prev, productId]);
+            setSelectedProducts((prev) => [
+                ...prev,
+                { id: productId, title: productTitle, type: productType },
+            ]);
         } else {
             setSelectedProducts((prev) =>
-                prev.filter((id) => id !== productId)
+                prev.filter((it) => it.id !== productId)
             );
         }
     };
 
-    const onBulkDelete = () => {
-        ProductsApi.bulkDelete(selectedProducts)
-            .then((response) => {
-                setSelectedProducts([]);
-                fetchProducts(1);
-                showGlobalAlert({
-                    title: "Products Deleted",
-                    message: "Selected products have been deleted",
-                    variant: "success",
-                });
-            })
-            .catch((error) => {
-                showGlobalAlert({
-                    title: "Error",
-                    message: "Failed to delete products",
-                    variant: "danger",
-                });
-            });
+    const checkSelectedProducts = () => {
+        return (
+            selectedProducts.length !== 0 &&
+            selectedProducts.findIndex((it) => it.type === "flight") !== -1 &&
+            selectedProducts.findIndex((it) => it.type === "hotel") !== -1
+        );
     };
 
-    const onBulkInventoryChange = (value) => {
-        ProductsApi.buldChangeInventory(selectedProducts, value)
-            .then((response) => {
-                setSelectedProducts([]);
-                fetchProducts(1);
-                showGlobalAlert({
-                    title: "Products Inventory Updated",
-                    message: "Selected products inventory has been updated",
-                    variant: "success",
-                });
-            })
-            .catch((error) => {
-                showGlobalAlert({
-                    title: "Error",
-                    message: "Failed to update products inventory",
-                    variant: "danger",
-                });
+    const onCreatePackage = () => {
+        if (!checkSelectedProducts()) {
+            showGlobalAlert({
+                variant: "danger",
+                message: "You must specify flight + hotel at least.",
             });
+        } else {
+            setShowCreateModal(true);
+        }
     };
 
     return (
@@ -141,15 +122,12 @@ const ProductsPage = () => {
                 <ProductsPageHeader
                     className="d-flex flex-column"
                     selectedProducts={selectedProducts}
-                    onBulkDelete={onBulkDelete}
-                    onBulkInventoryChange={onBulkInventoryChange}
-                    onAddNewProductClick={() => {
-                        setShowCreateModal(true);
-                    }}
                     onFilterChange={onFilterChange}
                     onApplyFilters={() => {
                         fetchProducts(1);
                     }}
+                    onCreatePackage={onCreatePackage}
+                    onSelectProduct={onSelectProduct}
                 />
 
                 {isLoading && <Khoshpinner />}
@@ -167,12 +145,9 @@ const ProductsPage = () => {
                                             setProductDetailId(id);
                                             setShowDetailModal(true);
                                         }}
-                                        onChangeProductStatus={
-                                            changeProoductStatus
-                                        }
                                         isSelected={
-                                            selectedProducts.indexOf(
-                                                product.id
+                                            selectedProducts.findIndex(
+                                                (it) => it.id === product.id
                                             ) !== -1
                                         }
                                         onSelectProduct={onSelectProduct}
@@ -206,7 +181,7 @@ const ProductsPage = () => {
                 }}
                 productId={productDetailId}
             />
-            <CreateProductModal
+            <CreatePackageModal
                 show={showCreateModal}
                 onHide={(product) => {
                     if (product !== undefined) updateProducts(product);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Row, Col, Form, Button, Collapse } from "react-bootstrap";
 import { productCategories } from "../../utils/constants";
 
@@ -17,10 +17,10 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
         if (value === "") {
             delete kooft[key];
         }
-        if (key == "minPrice" && value === 0) {
+        if (key === "minPrice" && value === 0) {
             delete kooft[key];
         }
-        if (key == "maxPrice" && value === 1000) {
+        if (key === "maxPrice" && value === 1000) {
             delete kooft[key];
         }
 
@@ -154,7 +154,7 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
     );
 };
 
-const ProductsHeader = ({
+const ProductsPageHeader = ({
     onAddNewProductClick,
     onFilterChange,
     onApplyFilters,
@@ -169,12 +169,10 @@ const ProductsHeader = ({
         <>
             <Row className="mb-1 d-flex" style={{ width: "100%" }}>
                 <Col>
-                    <h1 className="ms-4 float-start rounded-pill">
-                        Your Products
-                    </h1>
+                    <h1 className="ms-4 float-start rounded-pill">Products</h1>
                 </Col>
                 <Col>
-                    <Button
+                    {/* <Button
                         variant="success"
                         className="float-end rounded-pill px-3"
                         onClick={() => {
@@ -182,7 +180,7 @@ const ProductsHeader = ({
                         }}
                     >
                         + Add
-                    </Button>
+                    </Button> */}
                     <Button
                         variant="primary"
                         onClick={() => setShowFilters((prev) => !prev)}
@@ -234,4 +232,4 @@ const ProductsHeader = ({
     );
 };
 
-export default ProductsHeader;
+export default ProductsPageHeader;

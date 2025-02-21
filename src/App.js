@@ -3,11 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/core/Header";
 import MainPage from "./pages/MainPage";
 import "./styles/global.scss";
-import Products from "./pages/Products";
+import ProductsPage from "./pages/ProductsPage";
 import KhoshAlert from "./components/core/KhoshAlert";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import LoginModal from "./components/core/LoginModal";
+import PackagesPage from "./pages/PackagesPage";
 
 function App() {
     const { isAuthenticated } = useContext(AuthContext);
@@ -20,7 +21,8 @@ function App() {
                     <Header />
                     <Routes>
                         <Route path="/" element={<MainPage />} />
-                        <Route path="/products" element={<Products />} />
+                        <Route path="/packages" element={<PackagesPage />} />
+                        <Route path="/products" element={<ProductsPage />} />
                     </Routes>
                 </>
             )}

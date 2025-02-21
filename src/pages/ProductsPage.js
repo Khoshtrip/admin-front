@@ -1,62 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Container, Pagination } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import { ProductCard } from "../components/products/ProcuctCard";
 import ProductDetailModal from "../components/products/ProductDetailModal";
-import ProductsHeader from "../components/products/ProductsHeader";
+import ProductsPageHeader from "../components/products/ProductsPageHeader";
 import CreateProductModal from "../components/products/CreateProdcutModal";
 import { ProductsApi } from "../apis/ProductsApi";
 import { showGlobalAlert } from "../components/core/KhoshAlert";
 import "../styles/products/Products.css";
 import Khoshpinner from "../components/core/Khoshpinner";
+import PaginationItems from "../components/core/PaginationItems";
 
-const PaginationItems = ({ onPageClick, pageCount }) => {
-    const items = [];
-    const [activePage, setActivePage] = useState(1);
-    for (
-        let number = Math.max(activePage - 3, 1);
-        number <= Math.min(activePage + 3, pageCount);
-        number++
-    ) {
-        items.push(
-            <Pagination.Item
-                key={number}
-                active={number === activePage}
-                onClick={() => {
-                    onPageClick(number);
-                    setActivePage(number);
-                }}
-            >
-                {number}
-            </Pagination.Item>
-        );
-    }
-
-    return (
-        <Pagination>
-            {activePage !== 1 && (
-                <Pagination.Prev
-                    onClick={() => {
-                        onPageClick(activePage - 1);
-                        setActivePage(activePage - 1);
-                    }}
-                />
-            )}
-            {activePage > 5 && <Pagination.Ellipsis />}
-            {items}
-            {activePage < pageCount - 5 && <Pagination.Ellipsis />}
-            {activePage < pageCount && (
-                <Pagination.Next
-                    onClick={() => {
-                        onPageClick(activePage + 1);
-                        setActivePage(activePage + 1);
-                    }}
-                />
-            )}
-        </Pagination>
-    );
-};
-
-const Products = () => {
+const ProductsPage = () => {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [productDetailId, setProductDetailId] = useState(undefined);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -92,7 +46,7 @@ const Products = () => {
                 // TODO: change to display message better
                 showGlobalAlert({
                     variant: "danger",
-                    message: "Error uploading product",
+                    message: "Error fetching products",
                 });
             })
             .finally(() => {
@@ -184,7 +138,7 @@ const Products = () => {
     return (
         <>
             <Container className="d-flex flex-column justify-content-center align-items-center mt-4 mb-2">
-                <ProductsHeader
+                <ProductsPageHeader
                     className="d-flex flex-column"
                     selectedProducts={selectedProducts}
                     onBulkDelete={onBulkDelete}
@@ -266,4 +220,4 @@ const Products = () => {
     );
 };
 
-export default Products;
+export default ProductsPage;

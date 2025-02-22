@@ -94,19 +94,27 @@ const ProductDetailModal = ({ show, onHide, productId }) => {
                         <ImageCarousels images={productData.imageUrls} />
                     )}
                     <Stack gap={3}>
-                        <strong>Name: {productData.name}</strong>
+                        <div>
+                            <strong>Name: </strong> {productData.name}
+                        </div>
+                        <div>
+                            <strong>Description: </strong>{" "}
+                            {productData.description}
+                        </div>
+                        <div>
+                            <strong>Price: </strong> {productData.price}
+                        </div>
+                        <div>
+                            <strong>Discount: </strong> {productData.discount}
+                        </div>
+                        <div>
+                            <strong>Category:</strong>{" "}
+                            {productCategories[productData.category]}
+                        </div>
 
-                        <strong>Description: {productData.description}</strong>
-
-                        <strong>Price: {productData.price}</strong>
-
-                        <strong>Discount: {productData.discount}</strong>
-
-                        <strong>
-                            Category: {productCategories[productData.category]}
-                        </strong>
-
-                        <strong>Summary: {productData.summary}</strong>
+                        <div>
+                            <strong>Summary: </strong> {productData.summary}
+                        </div>
                     </Stack>
                 </Modal.Body>
             )}

@@ -190,6 +190,7 @@ const ProductsPage = () => {
                 postCreate={() => {
                     fetchProducts(1);
                 }}
+                selectedProducts={selectedProducts}
             />
         </>
     );

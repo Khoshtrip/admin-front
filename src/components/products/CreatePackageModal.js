@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/core/Login.css";
-import { Form, Modal, Button, Col, Row } from "react-bootstrap";
+import { Form, Modal, Button, Col, Row, Stack } from "react-bootstrap";
 import { ProductsApi } from "../../apis/ProductsApi";
 import { ImagesApi } from "../../apis/ImagesApi";
 import Khoshpinner from "../core/Khoshpinner";
@@ -34,7 +34,7 @@ function uploadImagesHelper(selectedImages) {
 }
 
 const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
-    const [productData, setProductData] = useState({
+    const [packageData, setPackageData] = useState({
         name: "",
         photos: [],
         description: "",
@@ -42,7 +42,13 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
         discount: "",
         available_units: "",
         selectedImages: [],
+        hotel: selectedProducts.find((product) => product.type === "hotel"),
+        flight: selectedProducts.find((product) => product.type === "flight"),
+        activities: selectedProducts.filter(
+            (product) => product.type !== "hotel" || product.type !== "flight"
+        ),
     });
+
     const [touch, setTouch] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -55,7 +61,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                       "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
                   );
 
-        setProductData({ ...productData, [e.target.name]: value });
+        setPackageData({ ...packageData, [e.target.name]: value });
         validateField(e.target.name, value);
         setTouch({ ...touch, [e.target.name]: true });
     };
@@ -63,34 +69,14 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const { selectedImages } = productData;
-
-        setProductData((prev) => ({
-            ...prev,
-
-            hotel: selectedProducts.find(
-                (product) => product.category === "hotel"
-            ).id,
-
-            flight: selectedProducts.find(
-                (product) => product.category === "flight"
-            ).id,
-
-            activities: selectedProducts
-                .filter(
-                    (product) =>
-                        product.category !== "hotel" ||
-                        product.category !== "flight"
-                )
-                .map((product) => product.id),
-        }));
+        const { selectedImages } = packageData;
 
         uploadImagesHelper(selectedImages)
             .then(async (imageIds) => {
-                setProductData((prev) => ({ ...prev, images: imageIds }));
+                setPackageData((prev) => ({ ...prev, images: imageIds }));
 
                 await ProductsApi.createProduct({
-                    ...productData,
+                    ...packageData,
                     images: imageIds,
                 })
                     .then((response) => {
@@ -155,7 +141,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                         "Only .png and .jpg files are allowed.";
                 } else {
                     newErrors.selectedImages = "";
-                    setProductData((prev) => ({
+                    setPackageData((prev) => ({
                         ...prev,
                         selectedImages: files,
                     }));
@@ -167,10 +153,26 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
         setErrors(newErrors);
     };
 
+    useEffect(() => {
+        setPackageData((prev) => ({
+            ...prev,
+
+            hotel: selectedProducts.find((product) => product.type === "hotel"),
+
+            flight: selectedProducts.find(
+                (product) => product.type === "flight"
+            ),
+
+            activities: selectedProducts.filter(
+                (product) =>
+                    product.type !== "hotel" && product.type !== "flight"
+            ),
+        }));
+    }, [selectedProducts]);
     const resetState = () => {
         setErrors({});
         setTouch({});
-        setProductData({
+        setPackageData({
             name: "",
             description: "",
             price: "",
@@ -189,6 +191,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
     };
 
     const onClose = (product) => {
+        console.log(packageData);
         onHide(product);
         resetState();
     };
@@ -208,7 +211,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="text"
                                 name="name"
-                                value={productData.name}
+                                value={packageData.name}
                                 onChange={handleChange}
                                 required
                             />
@@ -223,7 +226,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="text"
                                 name="description"
-                                value={productData.description}
+                                value={packageData.description}
                                 onChange={handleChange}
                                 required
                             />
@@ -238,7 +241,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="text"
                                 name="price"
-                                value={productData.price}
+                                value={packageData.price}
                                 onChange={handleChange}
                                 isValid={touch.price && !errors.price}
                                 isInvalid={!!errors.price}
@@ -278,7 +281,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="text"
                                 name="stock"
-                                value={productData.stock}
+                                value={packageData.stock}
                                 onChange={handleChange}
                                 isValid={touch.stock && !errors.stock}
                                 isInvalid={!!errors.stock}
@@ -321,7 +324,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="date"
                                 name="start_date"
-                                value={productData.start_date}
+                                value={packageData.start_date}
                                 onChange={handleChange}
                                 required
                             />
@@ -336,12 +339,66 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                             <Form.Control
                                 type="date"
                                 name="end_date"
-                                value={productData.end_date}
+                                value={packageData.end_date}
                                 onChange={handleChange}
                                 required
                             />
                         </Col>
                     </Form.Group>
+
+                    {packageData.hotel && (
+                        <Form.Group controlId="Hotel" as={Row}>
+                            <Form.Label column sm="2">
+                                Hotel
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    type="text"
+                                    name="hotel"
+                                    value={packageData.hotel.title}
+                                    readOnly
+                                    required
+                                />
+                            </Col>
+                        </Form.Group>
+                    )}
+
+                    {packageData.flight && (
+                        <Form.Group controlId="Flight" as={Row}>
+                            <Form.Label column sm="2">
+                                Flight
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    type="text"
+                                    name="flight"
+                                    value={packageData.flight.title}
+                                    readOnly
+                                    required
+                                />
+                            </Col>
+                        </Form.Group>
+                    )}
+
+                    {packageData.activities &&
+                        packageData.activities.length !== 0 && (
+                            <Form.Group controlId="Activities" as={Row}>
+                                <Form.Label column sm="2">
+                                    Activities
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control
+                                        type="text"
+                                        name="activities"
+                                        value={packageData.activities
+                                            .map((it) => it.title)
+                                            .join(", ")}
+                                        readOnly
+                                        required
+                                    />
+                                </Col>
+                            </Form.Group>
+                        )}
 
                     <Modal.Footer as={Row} className="mb-0 pb-0">
                         <Button

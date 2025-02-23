@@ -41,7 +41,6 @@ const LoginModal = () => {
         await login(formData.phone_number, formData.password)
             .then(() => {
                 onClose();
-                console.log(user);
                 showGlobalAlert({
                     variant: "success",
                     message: "successfully logged in!",

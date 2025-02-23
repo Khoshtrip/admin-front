@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PackageCard from "../components/packages/PackageCard";
 import PackageDetailModal from "../components/packages/PackageDetailModal";
-import { getAllPackagesFixture, getPackages } from "../apis/PackagesApi";
+import { PackagesApi } from "../apis/PackagesApi";
 import { Row, Col, Container } from "react-bootstrap";
 import PaginationItems from "../components/core/PaginationItems";
 import Khoshpinner from "../components/core/Khoshpinner";
@@ -38,7 +38,7 @@ const PackagesPage = () => {
 
     const fetchPackages = async (page) => {
         setIsLoading(true);
-        await getPackages(filters, (page - 1) * limit, limit)
+        await PackagesApi.getPackages(filters, (page - 1) * limit, limit)
             .then((response) => {
                 setPackages(
                     response.data.packages.map((pkg) => {

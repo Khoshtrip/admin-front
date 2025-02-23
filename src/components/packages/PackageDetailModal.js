@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Carousel, ListGroup, Badge } from "react-bootstrap";
-import { getPackageById } from "../../apis/PackagesApi"; // API call to fetch package details
+import { Modal, Button, Carousel, ListGroup } from "react-bootstrap";
+import { PackagesApi } from "../../apis/PackagesApi"; // API call to fetch package details
 import Khoshpinner from "../core/Khoshpinner";
 
 const PackageDetailModal = ({ show, onHide, packageId }) => {
@@ -10,7 +10,7 @@ const PackageDetailModal = ({ show, onHide, packageId }) => {
     useEffect(() => {
         if (packageId) {
             setLoading(true);
-            getPackageById(packageId)
+            PackagesApi.getPackageById(packageId)
                 .then((data) => setPackageData(data.data))
                 .finally(() => setLoading(false));
         }

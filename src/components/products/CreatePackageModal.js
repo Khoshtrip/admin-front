@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/core/Login.css";
 import { Form, Modal, Button, Col, Row, Stack } from "react-bootstrap";
-import { ProductsApi } from "../../apis/ProductsApi";
+import { PackagesApi } from "../../apis/PackagesApi";
 import { ImagesApi } from "../../apis/ImagesApi";
 import Khoshpinner from "../core/Khoshpinner";
 import { showGlobalAlert } from "../core/KhoshAlert";
@@ -34,6 +34,7 @@ function uploadImagesHelper(selectedImages) {
 }
 
 const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
+    const hotelId = selectedProducts.find((product) => product.type === "hotel")?.id;
     const [packageData, setPackageData] = useState({
         name: "",
         photos: [],
@@ -75,14 +76,19 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
             .then(async (imageIds) => {
                 setPackageData((prev) => ({ ...prev, images: imageIds }));
 
-                await ProductsApi.createProduct({
-                    ...packageData,
+                const APIData = structuredClone(packageData);
+                APIData.hotel = APIData.hotel?.id;
+                APIData.flight = APIData.flight?.id;
+                APIData.activities = APIData.activities?.id;
+
+                await PackagesApi.createPackage({
+                    ...APIData,
                     images: imageIds,
                 })
                     .then((response) => {
                         showGlobalAlert({
                             variant: "success",
-                            message: "Product updated successfully",
+                            message: "Package created successfully",
                         });
                         onClose(response);
                         postCreate();
@@ -90,7 +96,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                     .catch((error) => {
                         showGlobalAlert({
                             variant: "danger",
-                            message: "Error updating product",
+                            message: "Error creating package",
                         });
                     })
                     .finally(() => {
@@ -177,7 +183,6 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
             description: "",
             price: "",
             discount: "",
-            stock: "",
             category: "",
             start_date: "",
             end_date: "",
@@ -191,7 +196,6 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
     };
 
     const onClose = (product) => {
-        console.log(packageData);
         onHide(product);
         resetState();
     };
@@ -280,8 +284,8 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                         <Col sm="10">
                             <Form.Control
                                 type="text"
-                                name="stock"
-                                value={packageData.stock}
+                                name="available_units"
+                                value={packageData.available_units}
                                 onChange={handleChange}
                                 isValid={touch.stock && !errors.stock}
                                 isInvalid={!!errors.stock}

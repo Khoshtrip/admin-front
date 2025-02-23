@@ -87,7 +87,6 @@ export const ProductsApi = {
     bulkDelete: async (productIds) => {
         try {
             const csIDs = productIds.map((id) => id.toString()).join(",");
-            console.log(csIDs);
             const response = await api.delete("/product/delete", {
                 productIds: csIDs,
             });

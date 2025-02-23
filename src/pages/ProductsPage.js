@@ -3,13 +3,12 @@ import { Row, Col, Container } from "react-bootstrap";
 import { ProductCard } from "../components/products/ProcuctCard";
 import ProductDetailModal from "../components/products/ProductDetailModal";
 import ProductsPageHeader from "../components/products/ProductsPageHeader";
-import CreateProductModal from "../components/products/CreatePackageModal";
 import { ProductsApi } from "../apis/ProductsApi";
 import { showGlobalAlert } from "../components/core/KhoshAlert";
 import "../styles/products/Products.css";
 import Khoshpinner from "../components/core/Khoshpinner";
 import PaginationItems from "../components/core/PaginationItems";
-import CreatePackageModal from "../components/products/CreatePackageModal";
+import CreatePackageModal from "../components/packages/CreatePackageModal";
 
 const ProductsPage = () => {
     const [products, setProducts] = useState([]);

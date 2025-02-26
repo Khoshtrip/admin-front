@@ -53,6 +53,26 @@ const PackageDetailModal = ({ show, onHide, packageId }) => {
                     <ListGroup.Item>
                         <strong>Description:</strong> {packageData?.description}
                     </ListGroup.Item>
+                    {packageData?.flight && (
+                        <ListGroup.Item>
+                            <strong>Flight:</strong> {packageData.flight.name}
+                        </ListGroup.Item>
+                    )}
+                    {packageData?.hotel && (
+                        <ListGroup.Item>
+                            <strong>Hotel:</strong> {packageData.hotel.name}
+                        </ListGroup.Item>
+                    )}
+                    {packageData?.activities?.length > 0 && (
+                        <ListGroup.Item>
+                            <strong>Activities:</strong>
+                            <ul className="m-0 ps-3">
+                                {packageData.activities.map((activity) => (
+                                    <li key={activity.id}>{activity.name}</li>
+                                ))}
+                            </ul>
+                        </ListGroup.Item>
+                    )}
                 </ListGroup>
             </Modal.Body>
             <Modal.Footer>

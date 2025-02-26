@@ -8,7 +8,6 @@ const PackageCard = ({ pkg, onPackageClick }) => {
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
-
     return (
         <Card
             className="h-100"
@@ -58,6 +57,21 @@ const PackageCard = ({ pkg, onPackageClick }) => {
                         <div className="ms-auto">{pkg.end_date}</div>
                     </Stack>
                     <Badge bg="primary mt-2">${pkg.price}</Badge>
+                </Stack>
+                <hr />
+                <Stack direction="vertical" gap={1}>
+                    <strong>Flight:</strong>
+                    <div>{pkg.flight.name}</div>
+                    <strong>Hotel:</strong>
+                    <div>{pkg.hotel.name}</div>
+                    <strong>Activities:</strong>
+                    {pkg.activities.length > 0 ? (
+                        pkg.activities.map((activity) => (
+                            <div key={activity.id}>{activity.name}</div>
+                        ))
+                    ) : (
+                        <div>No Activities</div>
+                    )}
                 </Stack>
             </Card.Body>
             <Card.Footer>

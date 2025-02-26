@@ -79,7 +79,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                 const APIData = structuredClone(packageData);
                 APIData.hotel = APIData.hotel?.id;
                 APIData.flight = APIData.flight?.id;
-                APIData.activities = APIData.activities?.id;
+                APIData.activities = APIData.activities.map((x) => x?.id);
 
                 await PackagesApi.createPackage({
                     ...APIData,

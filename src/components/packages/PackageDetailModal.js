@@ -11,7 +11,15 @@ const PackageDetailModal = ({ show, onHide, packageId }) => {
         if (packageId) {
             setLoading(true);
             PackagesApi.getPackageById(packageId)
-                .then((data) => setPackageData(data.data))
+                .then((data) =>
+                    setPackageData({
+                        ...data.data,
+                        photos: data.data.photos.map(
+                            (image) =>
+                                `http://localhost:8000/api/image/${image}/download/`
+                        ),
+                    })
+                )
                 .finally(() => setLoading(false));
         }
     }, [packageId]);
@@ -31,6 +39,16 @@ const PackageDetailModal = ({ show, onHide, packageId }) => {
                                     className="d-block w-100"
                                     src={photo}
                                     alt="Package"
+                                    style={{
+                                        minBlockSize: "400px",
+                                        maxBlockSize: "400px",
+                                        objectFit: "contain",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: "white",
+                                        overflow: "hidden",
+                                    }}
                                 />
                             </Carousel.Item>
                         ))}
@@ -75,11 +93,6 @@ const PackageDetailModal = ({ show, onHide, packageId }) => {
                     )}
                 </ListGroup>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
-                    Close
-                </Button>
-            </Modal.Footer>
         </Modal>
     );
 };

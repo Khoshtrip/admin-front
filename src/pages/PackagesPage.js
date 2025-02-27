@@ -40,11 +40,13 @@ const PackagesPage = () => {
         setIsLoading(true);
         await PackagesApi.getPackages(filters, (page - 1) * limit, limit)
             .then((response) => {
+                console.log(response);
                 setPackages(
                     response.data.packages.map((pkg) => {
                         return {
                             ...pkg,
-                            photos: pkg.photos.map((photo) => photo.url),
+                            photos: pkg.photos.map((id) => 
+                                `http://localhost:8000/api/image/${id}/download/`),
                         };
                     })
                 );

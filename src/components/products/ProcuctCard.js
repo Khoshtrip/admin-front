@@ -45,7 +45,14 @@ export const ProductCard = ({
             <Card.Img
                 variant="top"
                 src={product.imageUrl}
-                sizes="(max-width: 600px) 150px"
+                style={{
+                    minBlockSize: "200px",
+                    maxBlockSize: "200px",
+                    objectFit: "contain",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
             />
 
             <Card.Body

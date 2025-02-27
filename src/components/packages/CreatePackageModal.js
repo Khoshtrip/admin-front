@@ -34,7 +34,9 @@ function uploadImagesHelper(selectedImages) {
 }
 
 const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
-    const hotelId = selectedProducts.find((product) => product.type === "hotel")?.id;
+    const hotelId = selectedProducts.find(
+        (product) => product.type === "hotel"
+    )?.id;
     const [packageData, setPackageData] = useState({
         name: "",
         photos: [],
@@ -83,6 +85,7 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
 
                 await PackagesApi.createPackage({
                     ...APIData,
+                    photos: imageIds,
                     images: imageIds,
                 })
                     .then((response) => {

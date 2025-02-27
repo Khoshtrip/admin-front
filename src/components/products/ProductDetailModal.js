@@ -18,21 +18,22 @@ import { productCategories } from "../../utils/constants";
 
 const ImageCarousels = ({ images }) => {
     return (
-        <Carousel data-bs-theme="dark" className="mb-3 mt-3">
+        <Carousel>
             {images?.map((image, index) => (
-                <Carousel.Item
-                    key={index}
-                    className="justify-content-center"
-                    style={{ height: "300px", textAlign: "center" }}
-                >
-                    <Image
+                <Carousel.Item key={index}>
+                    <img
+                        className="d-block w-100 h-100"
                         src={image}
                         alt={image || "ax"}
                         style={{
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            minHeight: "100%",
+                            minBlockSize: "400px",
+                            maxBlockSize: "400px",
                             objectFit: "contain",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                            overflow: "hidden",
                         }}
                     />
                 </Carousel.Item>

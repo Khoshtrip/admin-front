@@ -6,11 +6,9 @@ let kooft = {};
 const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
     const [filters, setFilters] = useState({
         search: "",
-        category: "",
         minPrice: 0,
         maxPrice: 1000,
         stockAvailable: true,
-        isActive: true,
     });
 
     const handleFilterChange = (key, value) => {
@@ -54,32 +52,6 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
                                         )
                                     }
                                 />
-                            </Col>
-                            <Col md={6} className="mb-3">
-                                <Form.Group controlId="Category" as={Row}>
-                                    <Form.Label>Category</Form.Label>
-                                    <Form.Select
-                                        name="category"
-                                        value={filters.category || ""}
-                                        onChange={(e) => {
-                                            handleFilterChange(
-                                                "category",
-                                                e.target.value
-                                            );
-                                        }}
-                                    >
-                                        <option value="">
-                                            Select a Category
-                                        </option>
-                                        {Object.entries(productCategories).map(
-                                            ([key, value]) => (
-                                                <option key={key} value={key}>
-                                                    {value}
-                                                </option>
-                                            )
-                                        )}
-                                    </Form.Select>
-                                </Form.Group>
                             </Col>
                         </Row>
                         <Row>

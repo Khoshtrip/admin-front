@@ -8,6 +8,7 @@ const PackageCard = ({ pkg, onPackageClick }) => {
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
+
     return (
         <Card
             className="h-100"
@@ -30,6 +31,14 @@ const PackageCard = ({ pkg, onPackageClick }) => {
                                 src={photo}
                                 alt="Package Image"
                                 sizes="(max-width: 600px) 150px"
+                                style={{
+                                    minBlockSize: "200px",
+                                    maxBlockSize: "200px",
+                                    objectFit: "contain",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
                             />
                         </Carousel.Item>
                     ))
@@ -37,9 +46,17 @@ const PackageCard = ({ pkg, onPackageClick }) => {
                     <Carousel.Item>
                         <Card.Img
                             variant="top"
-                            src="/default.jpg"
+                            src="http://localhost:8000/api/image/1/download/"
                             alt="Default Package Image"
                             sizes="(max-width: 600px) 150px"
+                            style={{
+                                minBlockSize: "200px",
+                                maxBlockSize: "200px",
+                                objectFit: "contain",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
                         />
                     </Carousel.Item>
                 )}

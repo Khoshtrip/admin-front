@@ -34,7 +34,7 @@ export const PackagesApi = {
 
     updatePackage: async (packageId, packageData) => {
         try {
-            const response = await api.put(`/packages/${packageId}`, packageData);
+            const response = await api.put(`/packages/${packageId}/`, packageData);
             return response.data;
         } catch (error) {
             throw error.response?.data || error;
@@ -43,7 +43,7 @@ export const PackagesApi = {
 
     deletePackage: async (packageId) => {
         try {
-            await api.delete(`/packages/${packageId}`);
+            await api.delete(`/packages/${packageId}/`);
             return { status: "success", message: "Package deleted successfully" };
         } catch (error) {
             throw error.response?.data || error;

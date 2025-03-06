@@ -106,7 +106,11 @@ const PackagesPage = () => {
             </Container>
             <PackageDetailModal
                 show={showDetailModal}
-                onHide={() => setShowDetailModal(false)}
+                onHide={(packageData, isDelete) => {
+                    if (packageData !== undefined)
+                        updatePackages(packageData, isDelete);
+                    setShowDetailModal(false);
+                }}
                 packageId={selectedPackageId}
             />
         </>

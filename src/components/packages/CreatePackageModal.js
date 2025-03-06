@@ -260,26 +260,6 @@ const CreatePackageModal = ({ show, onHide, postCreate, selectedProducts }) => {
                         </Col>
                     </Form.Group>
 
-                    {/* <Form.Group controlId="Discount" as={Row}>
-                        <Form.Label column sm="2">
-                            Discount*
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control
-                                type="text"
-                                name="discount"
-                                value={productData.discount}
-                                onChange={handleChange}
-                                isValid={touch.discount && !errors.discount}
-                                isInvalid={!!errors.discount}
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.discount}
-                            </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group> */}
-
                     <Form.Group controlId="Stock" as={Row}>
                         <Form.Label column sm="2">
                             Stock*

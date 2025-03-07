@@ -46,7 +46,7 @@ const PackageCard = ({ pkg, onPackageClick }) => {
                     <Carousel.Item>
                         <Card.Img
                             variant="top"
-                            src="http://localhost:8000/api/image/1/download/"
+                            src="http://api.khosh-trip.ir/api/image/1/download/"
                             alt="Default Package Image"
                             sizes="(max-width: 600px) 150px"
                             style={{

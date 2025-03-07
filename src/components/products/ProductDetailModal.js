@@ -62,7 +62,7 @@ const ProductDetailModal = ({ show, onHide, productId }) => {
                 ...product.data,
                 imageUrls: product.data.images.map(
                     (image) =>
-                        `http://localhost:8000/api/image/${image}/download/`
+                        `http://api.khosh-trip.ir/api/image/${image}/download/`
                 ),
             });
         } catch (error) {

@@ -36,7 +36,7 @@ const ProductsPage = () => {
                 setProducts(
                     response.data.products.map((product) => {
                         if (product.images.length > 0) {
-                            product.imageUrl = `http://localhost:8000/api/image/${product.images[0]}/download/`;
+                            product.imageUrl = `http://api.khosh-trip.ir/api/image/${product.images[0]}/download/`;
                         } else {
                             product.imageUrl =
                                 "https://via.placeholder.com/150";

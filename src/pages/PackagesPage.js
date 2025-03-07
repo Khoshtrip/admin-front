@@ -46,7 +46,7 @@ const PackagesPage = () => {
                         return {
                             ...pkg,
                             photos: pkg.photos.map((id) => 
-                                `http://localhost:8000/api/image/${id}/download/`),
+                                `http://api.khosh-trip.ir/api/image/${id}/download/`),
                         };
                     })
                 );

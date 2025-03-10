@@ -15,9 +15,6 @@ const HeaderTabs = () => {
             <Nav.Link href="/packages" className="on-primary">
                 Packages
             </Nav.Link>
-            <Nav.Link href="/providers" className="on-primary">
-                Providers
-            </Nav.Link>
             <Nav.Link href="/products" className="on-primary">
                 Products
             </Nav.Link>

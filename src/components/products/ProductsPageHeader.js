@@ -13,6 +13,11 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
         isActive: true,
     });
 
+    const resetFilters = () => {
+        kooft = {};
+        setFilters({});
+    };
+
     const handleFilterChange = (key, value) => {
         if (value === "") {
             delete kooft[key];
@@ -145,6 +150,12 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Button type="submit">Search</Button>
+                                <Button
+                                    variant="outline-danger"
+                                    onClick={resetFilters}
+                                >
+                                    Clear
+                                </Button>
                             </Col>
                         </Row>
                     </Form>

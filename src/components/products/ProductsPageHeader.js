@@ -150,12 +150,6 @@ const FilterComponent = ({ showFilters, onFilterChange, onApplyFilters }) => {
                             </Col>
                             <Col md={6} className="mb-3">
                                 <Button type="submit">Search</Button>
-                                <Button
-                                    variant="outline-danger"
-                                    onClick={resetFilters}
-                                >
-                                    Clear
-                                </Button>
                             </Col>
                         </Row>
                     </Form>
